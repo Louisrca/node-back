@@ -1,31 +1,31 @@
-const { Validator } = require("jsonschema");
+const { Validator } = require('jsonschema');
 
 module.exports = {
   verifyUser: (req) => {
     let validator = new Validator();
     let userSchema = {
       name: {
-        type: "string",
+        type: 'string',
         minLenght: 1,
-        errorMessage: "Invalid name or missing name",
+        errorMessage: 'Invalid name or missing name',
       },
       lastname: {
-        type: "string",
+        type: 'string',
         minLenght: 1,
-        errorMessage: "Invalid lastname or missing lastname",
+        errorMessage: 'Invalid lastname or missing lastname',
       },
       email: {
-        type: "email",
-        format: "email",
-        errorMessage: "Invalid email or missing email",
+        type: 'email',
+        format: 'email',
+        errorMessage: 'Invalid email or missing email',
       },
       password: {
-        type: "string",
+        type: 'string',
         minLenght: 6,
-        pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])",
-        errorMessage: "Invalid password or missing password",
+        pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])',
+        errorMessage: 'Invalid password or missing password',
       },
-      required: ["name", "lastname", "email", "password"],
+      required: ['name', 'lastname', 'email', 'password'],
     };
     let validationResponse = validator.validate(req.body, userSchema);
 

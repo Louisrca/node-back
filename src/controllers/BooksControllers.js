@@ -1,19 +1,19 @@
-const Book = require("../models/BooksModel");
-const { verifyBook } = require("../validator/BookValidator");
+const Book = require('../models/BooksModel');
+const { verifyBook } = require('../validator/BookValidator');
 
 const getBooks = async (req, res) => {
   try {
     const products = await Book.find();
     return res.json(products);
   } catch (error) {
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: `Internal server error : ${error}` });
   }
 };
 
 const getBookById = async (req, res) => {
   const book = await Book.findById(req.params.id);
   if (!book) {
-    return res.status(404).json({ error: "Book not found" });
+    return res.status(404).json({ error: 'Book not found' });
   }
   return res.json(book);
 };
@@ -49,7 +49,7 @@ const createBook = (req, res) => {
 const updateBook = async (req, res) => {
   const book = await Book.findById(req.params.id);
   if (!book) {
-    return res.status(404).json({ error: "Book not found" });
+    return res.status(404).json({ error: 'Book not found' });
   }
   book.title = req.body.title;
   book.totalPages = req.body.totalPages;
@@ -71,7 +71,7 @@ const updateBook = async (req, res) => {
 const deleteBook = async (req, res) => {
   const book = await Book.findById(req.params.id);
   if (!book) {
-    return res.status(404).json({ error: "Book not found" });
+    return res.status(404).json({ error: 'Book not found' });
   }
   book
     .deleteOne()

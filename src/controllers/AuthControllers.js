@@ -1,7 +1,7 @@
-const User = require("../models/UsersModel");
-const { verifyUser } = require("../validator/UserValidator");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const User = require('../models/UsersModel');
+const { verifyUser } = require('../validator/UserValidator');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const register = async (req, res) => {
   try {
@@ -28,7 +28,7 @@ const register = async (req, res) => {
     }
   } catch (error) {
     res.status(500).send({
-      message: error.message || "Some error occurred while registering user",
+      message: error.message || 'Some error occurred while registering user',
     });
   }
 };
@@ -38,12 +38,12 @@ const login = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).send({ message: "Email or Password wrong" });
+      return res.status(401).send({ message: 'Email or Password wrong' });
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
-      return res.status(401).send({ message: "Email or Password wrong" });
+      return res.status(401).send({ message: 'Email or Password wrong' });
     }
 
     const userData = {
@@ -51,13 +51,13 @@ const login = async (req, res) => {
     };
     const secret = process.env.JWT_TOKEN;
     const jwtData = {
-      expiresIn: process.env.JWT_TIMEOUT_DURATION || "1h",
+      expiresIn: process.env.JWT_TIMEOUT_DURATION || '1h',
     };
 
     const token = jwt.sign(userData, secret, jwtData);
 
     res.status(200).send({
-      message: "Successfully logged in",
+      message: 'Successfully logged in',
       user: {
         name: user.name,
         lastname: user.lastname,
@@ -67,7 +67,7 @@ const login = async (req, res) => {
     });
   } catch (error) {
     res.status(500).send({
-      message: error.message || "some error occurred while logging user",
+      message: error.message || 'some error occurred while logging user',
     });
   }
 };

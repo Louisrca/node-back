@@ -1,28 +1,28 @@
-const { Validator } = require("jsonschema");
+const { Validator } = require('jsonschema');
 
 module.exports = {
   verifyBook: (req) => {
     let validator = new Validator();
     let bookSchema = {
-      type: "object",
+      type: 'object',
       properties: {
         title: {
-          type: "string",
+          type: 'string',
           minLenght: 1,
-          errorMessage: "Invalid title or missing title",
+          errorMessage: 'Invalid title or missing title',
         },
         totalPages: {
-          type: "number",
+          type: 'number',
           min: 1,
-          errorMessage: "Invalid totalPages or missing totalPages",
+          errorMessage: 'Invalid totalPages or missing totalPages',
         },
         description: {
-          type: "string",
+          type: 'string',
           minLenght: 1,
-          errorMessage: "Invalid description or missing description",
+          errorMessage: 'Invalid description or missing description',
         },
       },
-      required: ["title", "totalPages", "description"],
+      required: ['title', 'totalPages', 'description'],
     };
     let validationResponse = validator.validate(req.body, bookSchema);
 
