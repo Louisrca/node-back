@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const verifyToken = require("../middleware/jwt");
 
 const {
   getBooks,
@@ -9,10 +10,10 @@ const {
   deleteBook,
 } = require("../controllers/BooksControllers");
 
-router.get("/", getBooks);
-router.get("/:id", getBookById);
-router.post("/", createBook);
-router.put("/:id", updateBook);
-router.delete("/:id", deleteBook);
+router.get("/", verifyToken, getBooks);
+router.get("/:id", verifyToken, getBookById);
+router.post("/", verifyToken, createBook);
+router.put("/:id", verifyToken, updateBook);
+router.delete("/:id", verifyToken, deleteBook);
 
 module.exports = router;

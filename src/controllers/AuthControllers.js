@@ -1,32 +1,75 @@
 const User = require("../models/UsersModel");
+const { verifyUser } = require("../validator/UserValidator");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
-  const { name, email, password } = req.body;
-
-  const user = new User({
-    name,
-    email,
-    password,
-  });
-
   try {
-    await user.save();
-    return res.status(201).json(user);
+    const newUser = req.body;
+    const isNotValidateUser = verifyUser(newUser);
+
+    if (isNotValidateUser) {
+      res.status(400).send({
+        error: isNotValidateUser.message,
+      });
+    } else {
+      newUser.password = await bcrypt.hash(newUser.password, 10);
+      const { id, lastname, name, email } = await User.create(newUser);
+
+      res.send({
+        sucess: true,
+        user: {
+          id, // id: id
+          lastname,
+          name,
+          email,
+        },
+      });
+    }
   } catch (error) {
-    return res.status(400).json({ error: error.message });
+    res.status(500).send({
+      message: error.message || "Some error occurred while registering user",
+    });
   }
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).send({ message: "Email or Password wrong" });
+    }
 
-  const user = await User.findByEmail({ email });
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(401).send({ message: "Email or Password wrong" });
+    }
 
-  if (!user || user.password !== password) {
-    return res.status(401).json({ error: "Invalid credentials" });
+    const userData = {
+      email: user.email,
+    };
+    const secret = process.env.JWT_TOKEN;
+    const jwtData = {
+      expiresIn: process.env.JWT_TIMEOUT_DURATION || "1h",
+    };
+
+    const token = jwt.sign(userData, secret, jwtData);
+
+    res.status(200).send({
+      message: "Successfully logged in",
+      user: {
+        name: user.name,
+        lastname: user.lastname,
+        email: user.email,
+        token,
+      },
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: error.message || "some error occurred while logging user",
+    });
   }
-
-  return res.status(200).json(user);
 };
 
 module.exports = { register, login };

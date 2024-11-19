@@ -22,6 +22,10 @@ const bookSchema = Schema({
     type: Date,
     default: Date.now,
   },
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 const Book = mongoose.model("Book", bookSchema);

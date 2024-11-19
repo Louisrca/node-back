@@ -6,8 +6,7 @@ const mongoose = require("mongoose");
 
 const port = process.env.PORT || 8080;
 
-const book_routes = require("./src/routes/books");
-const apiKeyAuth = require("./src/middleware/SecurityMiddleware");
+const indexRoutes = require("./src/routes/index");
 
 mongoose
   .connect(
@@ -29,6 +28,4 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.use("/api", apiKeyAuth);
-
-app.use("/api/books", book_routes);
+app.use("/api", indexRoutes);

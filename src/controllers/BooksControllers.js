@@ -19,10 +19,13 @@ const getBookById = async (req, res) => {
 };
 
 const createBook = (req, res) => {
-  const book = new Book({
+  const newBook = new Book({
     title: req.body.title,
     totalPages: req.body.totalPages,
     description: req.body.description,
+    createAt: Date.now(),
+    updateAt: Date.now(),
+    author: req.user,
   });
 
   const isBookValid = verifyBook(req);
@@ -31,7 +34,7 @@ const createBook = (req, res) => {
     return res.status(400).json({ error: verifyBook(req, res) });
   }
 
-  book
+  newBook
     .save()
     .then((book) => {
       const status = (res.status = 200);
