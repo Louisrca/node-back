@@ -47,7 +47,10 @@ const login = async (req, res) => {
     }
 
     const userData = {
+      id: user.id,
       email: user.email,
+      name: user.name,
+      lastname: user.lastname,
     };
     const secret = process.env.JWT_TOKEN;
     const jwtData = {
