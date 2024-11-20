@@ -51,7 +51,7 @@ const login = async (req, res) => {
     };
     const secret = process.env.JWT_TOKEN;
     const jwtData = {
-      expiresIn: process.env.JWT_TIMEOUT_DURATION || '1h',
+      expiresIn: process.env.JWT_TIME_OUT || '12h',
     };
 
     const token = jwt.sign(userData, secret, jwtData);
